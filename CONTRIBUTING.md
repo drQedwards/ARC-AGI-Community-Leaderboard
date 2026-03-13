@@ -40,11 +40,30 @@ Do **not** create a new directory for updates — keep everything in your origin
   - `version` — version string
   - `date` — date in YYYY-MM-DD format
   - `models` — at least one model with `name`
-  - `scores` — a mapping of benchmark to score object. Each entry requires:
+  - `scores` — a list of score objects. Each entry requires:
+    - `benchmark` — one of `arc-agi-1`, `arc-agi-2`, `arc-agi-3`
     - `score` — number 0–100
-    - `set` — the eval set used (e.g. `"public"`, `"preview"`, `"private"`)
+    - `set` — the eval set used (e.g. `"public"`, `"semi-private"`, `"preview"`, `"private"`)
     - `scorecard_url` — **required for arc-agi-3** (optional for arc-agi-1/arc-agi-2); must resolve if provided
     - `cost` — optional; USD cost to achieve score (positive number)
+
+  Using a list allows multiple entries for the same benchmark (e.g. different sets or cost tiers). Example:
+  ```yaml
+  scores:
+    - benchmark: "arc-agi-2"
+      score: 62.3
+      set: "public"
+      cost: 1.50
+    - benchmark: "arc-agi-2"
+      score: 45.0
+      set: "semi-private"
+      cost: 1.50
+    - benchmark: "arc-agi-3"
+      score: 14.1
+      set: "preview"
+      cost: 8.50
+      scorecard_url: "https://three.arcprize.org/scorecards/abc123"
+  ```
 
 ### Optional Fields
 

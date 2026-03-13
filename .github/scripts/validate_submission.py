@@ -151,20 +151,26 @@ def validate_submission(filepath):
             # scores
             scores = ver.get("scores")
             if scores is not None:
-                if not isinstance(scores, dict) or len(scores) == 0:
-                    errors.append(ValidationError(f"{prefix}.scores", "Must be a mapping with at least one benchmark score"))
+                if not isinstance(scores, list) or len(scores) == 0:
+                    errors.append(ValidationError(f"{prefix}.scores", "Must be a list with at least one score entry"))
                 else:
-                    for benchmark, score_val in scores.items():
-                        bprefix = f"{prefix}.scores.{benchmark}"
-                        if benchmark not in VALID_ARC_VERSIONS:
-                            errors.append(ValidationError(
-                                f"{prefix}.scores",
-                                f"Invalid benchmark key '{benchmark}'. Must be one of: {', '.join(sorted(VALID_ARC_VERSIONS))}"
-                            ))
-
+                    for k, score_val in enumerate(scores):
+                        bprefix = f"{prefix}.scores[{k}]"
                         if not isinstance(score_val, dict):
-                            errors.append(ValidationError(bprefix, f"Must be an object with 'score' and 'set' fields, got: {type(score_val).__name__}"))
+                            errors.append(ValidationError(bprefix, f"Each score entry must be a mapping, got: {type(score_val).__name__}"))
                             continue
+
+                        # benchmark (required)
+                        benchmark = score_val.get("benchmark")
+                        if not benchmark:
+                            errors.append(ValidationError(f"{bprefix}.benchmark", "Required field 'benchmark' is missing"))
+                            benchmark = None
+                        elif benchmark not in VALID_ARC_VERSIONS:
+                            errors.append(ValidationError(
+                                f"{bprefix}.benchmark",
+                                f"Invalid benchmark '{benchmark}'. Must be one of: {', '.join(sorted(VALID_ARC_VERSIONS))}"
+                            ))
+                            benchmark = None
 
                         # score (required)
                         raw_score = score_val.get("score")

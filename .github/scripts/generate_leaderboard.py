@@ -65,11 +65,14 @@ def load_submissions():
         best_scores = {}
         all_benchmarks = set()
         for v in versions:
-            scores = v.get("scores", {})
-            if not isinstance(scores, dict):
+            scores = v.get("scores", [])
+            if not isinstance(scores, list):
                 continue
-            for benchmark, score_val in scores.items():
+            for score_val in scores:
                 if not isinstance(score_val, dict):
+                    continue
+                benchmark = score_val.get("benchmark")
+                if not benchmark:
                     continue
                 all_benchmarks.add(benchmark)
                 set_name = score_val.get("set", "")
