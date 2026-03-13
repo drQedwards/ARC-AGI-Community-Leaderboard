@@ -7,14 +7,16 @@ A community-driven showcase of methods, harnesses, and approaches for [ARC-AGI](
 ## Leaderboard
 
 <!-- LEADERBOARD:START - Do not remove or modify this section -->
-*No submissions yet.*
+
+_No submissions yet._
+
 <!-- LEADERBOARD:END -->
 
 ## How to Submit
 
 1. Fork this repository
 2. Copy `submissions/.example/` to `submissions/<your-submission-id>/`
-   - Use a short, lowercase, hyphenated ID (e.g. `reflection-loop`, `my-harness-v2`)
+   - Use a short, lowercase, hyphenated ID (e.g. `my-harness-v2`)
 3. Fill in `submission.yaml` following the template
 4. Open a Pull Request
 
