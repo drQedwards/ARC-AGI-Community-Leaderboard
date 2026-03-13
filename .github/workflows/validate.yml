@@ -1,0 +1,36 @@
+name: Validate Submission
+
+on:
+  pull_request:
+    paths:
+      - 'submissions/**'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install pyyaml requests
+
+      - name: Find changed submission files
+        id: changed
+        run: |
+          # Get YAML files changed in this PR under submissions/
+          FILES=$(git diff --name-only origin/main...HEAD -- 'submissions/*/submission.yaml')
+          echo "files<<EOF" >> $GITHUB_OUTPUT
+          echo "$FILES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Validate submissions
+        run: |
+          python .github/scripts/validate_submission.py ${{ steps.changed.outputs.files }}
