@@ -76,16 +76,28 @@ def load_submissions():
                     continue
                 all_benchmarks.add(benchmark)
                 set_name = score_val.get("set", "")
-                numeric = score_val.get("score", 0)
-                if benchmark not in best_scores:
-                    best_scores[benchmark] = {}
-                existing = best_scores[benchmark].get(set_name)
-                if existing is None or numeric > existing["score"]:
-                    best_scores[benchmark][set_name] = {
-                        "score": numeric,
-                        "cost": score_val.get("cost"),
-                        "scorecard_url": score_val.get("scorecard_url"),
-                    }
+                scorecard_url = score_val.get("scorecard_url")
+                if benchmark == "arc-agi-3":
+                    # arc-agi-3 has no self-reported score; track by scorecard_url
+                    if benchmark not in best_scores:
+                        best_scores[benchmark] = {}
+                    if set_name not in best_scores[benchmark]:
+                        best_scores[benchmark][set_name] = {
+                            "score": None,
+                            "cost": score_val.get("cost"),
+                            "scorecard_url": scorecard_url,
+                        }
+                else:
+                    numeric = score_val.get("score", 0)
+                    if benchmark not in best_scores:
+                        best_scores[benchmark] = {}
+                    existing = best_scores[benchmark].get(set_name)
+                    if existing is None or numeric > existing["score"]:
+                        best_scores[benchmark][set_name] = {
+                            "score": numeric,
+                            "cost": score_val.get("cost"),
+                            "scorecard_url": None,
+                        }
 
         # Format authors
         authors = data.get("authors", [])
@@ -155,11 +167,17 @@ def generate_table(entries):
             continue
 
         label = ARC_VERSION_LABELS.get(arc_ver, arc_ver)
+        is_arc3 = arc_ver == "arc-agi-3"
+
         # Sort: set name alphabetically, then score descending within each set
-        rows_data = sorted(
-            by_benchmark[arc_ver],
-            key=lambda x: (x[0], -x[1]["score"]),
-        )
+        # arc-agi-3 has no numeric score so just sort by set name
+        if is_arc3:
+            rows_data = sorted(by_benchmark[arc_ver], key=lambda x: x[0])
+        else:
+            rows_data = sorted(
+                by_benchmark[arc_ver],
+                key=lambda x: (x[0], -(x[1]["score"] or 0)),
+            )
 
         header = f"### {label}\n"
         table_header = "| Rank | Name | Set | Score | Cost | Models | Code |"
@@ -167,11 +185,15 @@ def generate_table(entries):
 
         rows = [header, table_header, separator]
         for i, (set_name, score_data, entry) in enumerate(rows_data, 1):
-            score = score_data["score"]
             cost = score_data.get("cost")
             cost_str = f"${cost:.2f}" if cost is not None else "—"
             code_link = f"[Repo]({entry['code_url']})" if entry["code_url"] else ""
-            row = f"| {i} | {entry['name']} | {set_name} | {score}% | {cost_str} | {entry['models']} | {code_link} |"
+            if is_arc3:
+                scorecard_url = score_data.get("scorecard_url")
+                score_str = f"[Scorecard]({scorecard_url})" if scorecard_url else "—"
+            else:
+                score_str = f"{score_data['score']}%"
+            row = f"| {i} | {entry['name']} | {set_name} | {score_str} | {cost_str} | {entry['models']} | {code_link} |"
             rows.append(row)
 
         sections.append("\n".join(rows))

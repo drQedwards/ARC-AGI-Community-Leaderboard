@@ -172,19 +172,44 @@ def validate_submission(filepath):
                             ))
                             benchmark = None
 
-                        # score (required)
+                        # score / scorecard_url — rules differ by benchmark
                         raw_score = score_val.get("score")
-                        if raw_score is None:
-                            errors.append(ValidationError(f"{bprefix}.score", "Required field 'score' is missing"))
-                            numeric_score = None
-                        elif not isinstance(raw_score, (int, float)):
-                            errors.append(ValidationError(f"{bprefix}.score", f"Must be a number, got: {type(raw_score).__name__}"))
-                            numeric_score = None
-                        else:
-                            numeric_score = raw_score
+                        scorecard_url = score_val.get("scorecard_url")
 
-                        if numeric_score is not None and (numeric_score < 0 or numeric_score > 100):
-                            errors.append(ValidationError(f"{bprefix}.score", f"Must be between 0 and 100, got: {numeric_score}"))
+                        if benchmark is None:
+                            pass  # already reported an error above; skip further checks
+                        elif benchmark == "arc-agi-3":
+                            # arc-agi-3: scorecard_url required, score not allowed
+                            if raw_score is not None:
+                                errors.append(ValidationError(
+                                    f"{bprefix}.score",
+                                    "arc-agi-3 scores are pulled from the scorecard — do not include a 'score' field; use 'scorecard_url' instead"
+                                ))
+                            if not scorecard_url:
+                                errors.append(ValidationError(f"{bprefix}.scorecard_url", "scorecard_url is required for arc-agi-3 entries"))
+                            else:
+                                if not isinstance(scorecard_url, str) or not scorecard_url.startswith("http"):
+                                    errors.append(ValidationError(f"{bprefix}.scorecard_url", "Must be a valid URL starting with http(s)"))
+                                else:
+                                    errors.extend(check_url_resolves(scorecard_url, f"{bprefix}.scorecard_url"))
+                        else:
+                            # arc-agi-1 / arc-agi-2: score required, scorecard_url not allowed
+                            if scorecard_url is not None:
+                                errors.append(ValidationError(
+                                    f"{bprefix}.scorecard_url",
+                                    "scorecard_url is only available for arc-agi-3 entries; remove it for arc-agi-1/arc-agi-2"
+                                ))
+                            if raw_score is None:
+                                errors.append(ValidationError(f"{bprefix}.score", "Required field 'score' is missing"))
+                                numeric_score = None
+                            elif not isinstance(raw_score, (int, float)):
+                                errors.append(ValidationError(f"{bprefix}.score", f"Must be a number, got: {type(raw_score).__name__}"))
+                                numeric_score = None
+                            else:
+                                numeric_score = raw_score
+                            if raw_score is not None and isinstance(raw_score, (int, float)):
+                                if raw_score < 0 or raw_score > 100:
+                                    errors.append(ValidationError(f"{bprefix}.score", f"Must be between 0 and 100, got: {raw_score}"))
 
                         # set (required)
                         set_val = score_val.get("set")
@@ -196,16 +221,6 @@ def validate_submission(filepath):
                         if cost is not None:
                             if not isinstance(cost, (int, float)) or cost <= 0:
                                 errors.append(ValidationError(f"{bprefix}.cost", "Must be a positive number"))
-
-                        # scorecard_url (required for arc-agi-3, optional otherwise)
-                        scorecard_url = score_val.get("scorecard_url")
-                        if benchmark == "arc-agi-3" and not scorecard_url:
-                            errors.append(ValidationError(f"{bprefix}.scorecard_url", "scorecard_url is required for arc-agi-3 scores"))
-                        if scorecard_url:
-                            if not isinstance(scorecard_url, str) or not scorecard_url.startswith("http"):
-                                errors.append(ValidationError(f"{bprefix}.scorecard_url", "Must be a valid URL starting with http(s)"))
-                            else:
-                                errors.extend(check_url_resolves(scorecard_url, f"{bprefix}.scorecard_url"))
 
             # date
             date_val = ver.get("date")

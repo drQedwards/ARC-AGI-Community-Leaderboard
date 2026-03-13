@@ -35,12 +35,20 @@ twitter_url: ""
 # scores — a list of score objects
 #   valid benchmarks: arc-agi-1, arc-agi-2, arc-agi-3
 #
-#   Every score entry must be an object with:
-#     benchmark (required)    — one of arc-agi-1, arc-agi-2, arc-agi-3
-#     score (required)        — number 0-100
-#     set   (required)        — e.g. "public", "preview", "semi-private", "private"
-#     cost (optional)         — USD cost to achieve score
-#     scorecard_url (optional) — link to scorecard (required for arc-agi-3)
+#   arc-agi-1 / arc-agi-2 entries require:
+#     benchmark (required)    — "arc-agi-1" or "arc-agi-2"
+#     score     (required)    — number 0-100
+#     set       (required)    — e.g. "public", "semi-private", "private"
+#     cost      (optional)    — USD cost to achieve score
+#     NOTE: scorecard_url is NOT valid for arc-agi-1/arc-agi-2
+#
+#   arc-agi-3 entries require:
+#     benchmark     (required) — "arc-agi-3"
+#     scorecard_url (required) — link to your scorecard on three.arcprize.org
+#     set           (required) — e.g. "public", "preview"
+#     cost          (optional) — USD cost to achieve score
+#     NOTE: do NOT include a "score" field for arc-agi-3; scores are
+#           pulled automatically from your scorecard
 versions:
   - version: "1.0"
     date: 2026-01-01
@@ -53,7 +61,6 @@ versions:
         set: "private"
         cost: 0.00
       - benchmark: "arc-agi-3"
-        score: 0.0
-        set: "public"
         scorecard_url: "https://three.arcprize.org/scorecards/your-scorecard-id"
+        set: "public"
         cost: 0.00

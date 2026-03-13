@@ -40,12 +40,21 @@ Do **not** create a new directory for updates — keep everything in your origin
   - `version` — version string
   - `date` — date in YYYY-MM-DD format
   - `models` — at least one model with `name`
-  - `scores` — a list of score objects. Each entry requires:
-    - `benchmark` — one of `arc-agi-1`, `arc-agi-2`, `arc-agi-3`
-    - `score` — number 0–100
-    - `set` — the eval set used (e.g. `"public"`, `"semi-private"`, `"preview"`, `"private"`)
-    - `scorecard_url` — **required for arc-agi-3** (optional for arc-agi-1/arc-agi-2); must resolve if provided
+  - `scores` — a list of score objects. Fields differ by benchmark:
+
+    **arc-agi-1 and arc-agi-2:**
+    - `benchmark` — `"arc-agi-1"` or `"arc-agi-2"`
+    - `score` — **required**; number 0–100
+    - `set` — **required**; eval set used (e.g. `"public"`, `"semi-private"`, `"private"`)
     - `cost` — optional; USD cost to achieve score (positive number)
+    - `scorecard_url` — **not allowed**; scorecards are only available for arc-agi-3
+
+    **arc-agi-3:**
+    - `benchmark` — `"arc-agi-3"`
+    - `scorecard_url` — **required**; link to your scorecard on `three.arcprize.org`. arc-agi-3 scores are pulled automatically from the scorecard and should not be self-reported.
+    - `set` — **required**; eval set used (e.g. `"public"`, `"preview"`)
+    - `cost` — optional; USD cost to achieve score (positive number)
+    - `score` — **not allowed**; do not include a numeric score for arc-agi-3 entries
 
   Using a list allows multiple entries for the same benchmark (e.g. different sets or cost tiers). Example:
   ```yaml
@@ -59,10 +68,9 @@ Do **not** create a new directory for updates — keep everything in your origin
       set: "semi-private"
       cost: 1.50
     - benchmark: "arc-agi-3"
-      score: 14.1
+      scorecard_url: "https://three.arcprize.org/scorecards/abc123"
       set: "preview"
       cost: 8.50
-      scorecard_url: "https://three.arcprize.org/scorecards/abc123"
   ```
 
 ### Optional Fields
@@ -75,7 +83,8 @@ Do **not** create a new directory for updates — keep everything in your origin
 
 - Your `code_url` must point to a **public** repository at the time of submission.
 - You may include additional files in your submission directory (READMEs, diagrams, etc.) but please keep it lightweight — no binaries, model weights, or large data files. Link to those instead.
-- Scores are self-reported. Misrepresenting results undermines the community and may result in your entry being removed.
+- arc-agi-1/arc-agi-2 scores are self-reported. Misrepresenting results undermines the community and may result in your entry being removed.
+- arc-agi-3 scores are pulled automatically from your scorecard — do not self-report a numeric score.
 - Be respectful in discussions and PR comments.
 
 ## Directory Structure
