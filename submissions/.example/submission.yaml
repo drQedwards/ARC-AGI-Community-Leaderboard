@@ -32,8 +32,14 @@ twitter_url: ""
 # Version history — at least one version is required
 # Add new versions to the bottom of the list when you update your method
 #
-# scores — a mapping of benchmark → score (0-100)
-#           valid benchmarks: arc-agi-1, arc-agi-2, arc-agi-3
+# scores — a mapping of benchmark → score object
+#   valid benchmarks: arc-agi-1, arc-agi-2, arc-agi-3
+#
+#   Every score entry must be an object with:
+#     score (required)        — number 0-100
+#     set   (required)        — e.g. "public", "preview", "private"
+#     cost_per_task (optional) — average USD cost per task
+#     scorecard_url (optional) — link to scorecard (required for arc-agi-3)
 versions:
   - version: "1.0"
     date: 2026-01-01
@@ -41,4 +47,8 @@ versions:
     models:
       - name: "Model Name"
     scores:
-      arc-agi-3: 0.0
+      arc-agi-3:
+        score: 0.0
+        set: "public"
+        scorecard_url: "https://three.arcprize.org/scorecards/your-scorecard-id"
+        cost_per_task: 0.00

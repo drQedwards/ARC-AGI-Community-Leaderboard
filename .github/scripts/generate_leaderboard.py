@@ -26,6 +26,13 @@ END_MARKER = "<!-- LEADERBOARD:END -->"
 
 # Display order for benchmark versions
 ARC_VERSION_ORDER = ["arc-agi-3", "arc-agi-2", "arc-agi-1"]
+
+
+def _numeric_score(score_val):
+    """Extract the numeric score from a score object."""
+    if isinstance(score_val, dict):
+        return score_val.get("score", 0)
+    return 0
 ARC_VERSION_LABELS = {
     "arc-agi-1": "ARC-AGI-1",
     "arc-agi-2": "ARC-AGI-2",
@@ -66,10 +73,11 @@ def load_submissions():
         for v in versions:
             scores = v.get("scores", {})
             if isinstance(scores, dict):
-                for benchmark, score in scores.items():
+                for benchmark, score_val in scores.items():
                     all_benchmarks.add(benchmark)
-                    if benchmark not in best_scores or score > best_scores[benchmark]:
-                        best_scores[benchmark] = score
+                    numeric = _numeric_score(score_val)
+                    if benchmark not in best_scores or numeric > best_scores[benchmark]:
+                        best_scores[benchmark] = numeric
 
         # Format authors
         authors = data.get("authors", [])

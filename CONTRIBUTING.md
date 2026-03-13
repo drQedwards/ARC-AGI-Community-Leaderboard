@@ -40,7 +40,11 @@ Do **not** create a new directory for updates — keep everything in your origin
   - `version` — version string
   - `date` — date in YYYY-MM-DD format
   - `models` — at least one model with `name`
-  - `scores` — a mapping of benchmark to score (0-100), e.g. `arc-agi-2: 58.2`
+  - `scores` — a mapping of benchmark to score object. Each entry requires:
+    - `score` — number 0–100
+    - `set` — the eval set used (e.g. `"public"`, `"preview"`, `"private"`)
+    - `scorecard_url` — **required for arc-agi-3** (optional for arc-agi-1/arc-agi-2); must resolve if provided
+    - `cost_per_task` — optional; average USD cost per task (positive number)
 
 ### Optional Fields
 

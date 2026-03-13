@@ -154,16 +154,52 @@ def validate_submission(filepath):
                 if not isinstance(scores, dict) or len(scores) == 0:
                     errors.append(ValidationError(f"{prefix}.scores", "Must be a mapping with at least one benchmark score"))
                 else:
-                    for benchmark, score in scores.items():
+                    for benchmark, score_val in scores.items():
+                        bprefix = f"{prefix}.scores.{benchmark}"
                         if benchmark not in VALID_ARC_VERSIONS:
                             errors.append(ValidationError(
                                 f"{prefix}.scores",
                                 f"Invalid benchmark key '{benchmark}'. Must be one of: {', '.join(sorted(VALID_ARC_VERSIONS))}"
                             ))
-                        if not isinstance(score, (int, float)):
-                            errors.append(ValidationError(f"{prefix}.scores.{benchmark}", f"Must be a number, got: {type(score).__name__}"))
-                        elif score < 0 or score > 100:
-                            errors.append(ValidationError(f"{prefix}.scores.{benchmark}", f"Must be between 0 and 100, got: {score}"))
+
+                        if not isinstance(score_val, dict):
+                            errors.append(ValidationError(bprefix, f"Must be an object with 'score' and 'set' fields, got: {type(score_val).__name__}"))
+                            continue
+
+                        # score (required)
+                        raw_score = score_val.get("score")
+                        if raw_score is None:
+                            errors.append(ValidationError(f"{bprefix}.score", "Required field 'score' is missing"))
+                            numeric_score = None
+                        elif not isinstance(raw_score, (int, float)):
+                            errors.append(ValidationError(f"{bprefix}.score", f"Must be a number, got: {type(raw_score).__name__}"))
+                            numeric_score = None
+                        else:
+                            numeric_score = raw_score
+
+                        if numeric_score is not None and (numeric_score < 0 or numeric_score > 100):
+                            errors.append(ValidationError(f"{bprefix}.score", f"Must be between 0 and 100, got: {numeric_score}"))
+
+                        # set (required)
+                        set_val = score_val.get("set")
+                        if not set_val or not isinstance(set_val, str):
+                            errors.append(ValidationError(f"{bprefix}.set", "Required field 'set' is missing or empty"))
+
+                        # cost_per_task (optional, must be positive)
+                        cost = score_val.get("cost_per_task")
+                        if cost is not None:
+                            if not isinstance(cost, (int, float)) or cost <= 0:
+                                errors.append(ValidationError(f"{bprefix}.cost_per_task", "Must be a positive number"))
+
+                        # scorecard_url (required for arc-agi-3, optional otherwise)
+                        scorecard_url = score_val.get("scorecard_url")
+                        if benchmark == "arc-agi-3" and not scorecard_url:
+                            errors.append(ValidationError(f"{bprefix}.scorecard_url", "scorecard_url is required for arc-agi-3 scores"))
+                        if scorecard_url:
+                            if not isinstance(scorecard_url, str) or not scorecard_url.startswith("http"):
+                                errors.append(ValidationError(f"{bprefix}.scorecard_url", "Must be a valid URL starting with http(s)"))
+                            else:
+                                errors.extend(check_url_resolves(scorecard_url, f"{bprefix}.scorecard_url"))
 
             # date
             date_val = ver.get("date")
