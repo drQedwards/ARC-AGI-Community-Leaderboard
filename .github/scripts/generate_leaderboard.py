@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 """
-Generate the leaderboard table in README.md and a leaderboard.json file
-from all submission YAML files.
+Generate a leaderboard.json file from all submission YAML files.
 
-README table  — for browsing on GitHub (one section per ARC version)
 leaderboard.json — for the website to consume
 
 Run automatically via GitHub Actions on merge to main, or manually:
@@ -12,25 +10,12 @@ Run automatically via GitHub Actions on merge to main, or manually:
 
 import json
 import os
-from collections import defaultdict
 from datetime import datetime, timezone
 
 import yaml
 
 SUBMISSIONS_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "submissions")
-README_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "README.md")
 JSON_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "leaderboard.json")
-
-START_MARKER = "<!-- LEADERBOARD:START - Do not remove or modify this section -->"
-END_MARKER = "<!-- LEADERBOARD:END -->"
-
-# Display order for benchmark versions
-ARC_VERSION_ORDER = ["arc-agi-3", "arc-agi-2", "arc-agi-1"]
-ARC_VERSION_LABELS = {
-    "arc-agi-1": "ARC-AGI-1",
-    "arc-agi-2": "ARC-AGI-2",
-    "arc-agi-3": "ARC-AGI-3",
-}
 
 
 def load_submissions():
@@ -148,58 +133,6 @@ def load_submissions():
     return entries
 
 
-def generate_table(entries):
-    """Generate markdown tables grouped by ARC version."""
-    if not entries:
-        return "*No submissions yet.*"
-
-    # Build a flat list of (set_name, score_data, entry) per benchmark.
-    # A submission with scores on multiple sets appears as multiple rows.
-    by_benchmark = defaultdict(list)
-    for entry in entries:
-        for benchmark, sets in entry["best_scores"].items():
-            for set_name, score_data in sets.items():
-                by_benchmark[benchmark].append((set_name, score_data, entry))
-
-    sections = []
-    for arc_ver in ARC_VERSION_ORDER:
-        if arc_ver not in by_benchmark:
-            continue
-
-        label = ARC_VERSION_LABELS.get(arc_ver, arc_ver)
-        is_arc3 = arc_ver == "arc-agi-3"
-
-        # Sort: set name alphabetically, then score descending within each set
-        # arc-agi-3 has no numeric score so just sort by set name
-        if is_arc3:
-            rows_data = sorted(by_benchmark[arc_ver], key=lambda x: x[0])
-        else:
-            rows_data = sorted(
-                by_benchmark[arc_ver],
-                key=lambda x: (x[0], -(x[1]["score"] or 0)),
-            )
-
-        header = f"### {label}\n"
-        table_header = "| Rank | Name | Set | Score | Cost | Models | Code |"
-        separator = "|------|------|-----|-------|------|--------|------|"
-
-        rows = [header, table_header, separator]
-        for i, (set_name, score_data, entry) in enumerate(rows_data, 1):
-            cost = score_data.get("cost")
-            cost_str = f"${cost:.2f}" if cost is not None else "—"
-            code_link = f"[Repo]({entry['code_url']})" if entry["code_url"] else ""
-            if is_arc3:
-                scorecard_url = score_data.get("scorecard_url")
-                score_str = f"[Scorecard]({scorecard_url})" if scorecard_url else "—"
-            else:
-                score_str = f"{score_data['score']}%"
-            row = f"| {i} | {entry['name']} | {set_name} | {score_str} | {cost_str} | {entry['models']} | {code_link} |"
-            rows.append(row)
-
-        sections.append("\n".join(rows))
-
-    return "\n\n".join(sections)
-
 
 def generate_json(entries):
     """Write a JSON file for the website to consume."""
@@ -228,28 +161,10 @@ def generate_json(entries):
         json.dump(output, f, indent=2)
 
 
-def update_readme(table):
-    """Replace the leaderboard section in README.md."""
-    with open(README_PATH, "r") as f:
-        content = f.read()
-
-    start_idx = content.index(START_MARKER) + len(START_MARKER)
-    end_idx = content.index(END_MARKER)
-
-    new_content = content[:start_idx] + "\n" + table + "\n" + content[end_idx:]
-
-    with open(README_PATH, "w") as f:
-        f.write(new_content)
-
-
 def main():
     print("Generating leaderboard...")
     entries = load_submissions()
     print(f"  Found {len(entries)} submission(s)")
-
-    table = generate_table(entries)
-    update_readme(table)
-    print("  README.md updated ✓")
 
     generate_json(entries)
     print("  leaderboard.json updated ✓")
