@@ -1,14 +1,8 @@
 # ARC Prize Community Leaderboard
 
-A community-driven showcase of methods, harnesses, and approaches for [ARC-AGI](https://arcprize.org). Open to anyone - submit via Pull Request.
+A community-driven showcase of ARC-AGI methods, harnesses, and approaches for [ARC-AGI](https://arcprize.org). Open to anyone - submit via Pull Request.
 
 > **Note:** Scores are self-reported and have not been verified by ARC Prize. ARC Prize may choose to verify submissions at its discretion. For verified scores, see the [official leaderboard](https://arcprize.org/leaderboard).
-
-## Leaderboard
-
-<!-- LEADERBOARD:START - Do not remove or modify this section -->
-*No submissions yet.*
-<!-- LEADERBOARD:END -->
 
 ## How to Submit
 
@@ -26,7 +20,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for full details.
 
 This leaderboard is for **public** methods that score on ARC-AGI (v1, v2, or v3). Submissions should include:
 
-- A public code repository
+- A link to a reproducible solution held within a public code repository
 - A description of the approach
 - Self-reported scores with version history
 
