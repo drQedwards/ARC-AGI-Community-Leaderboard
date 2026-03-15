@@ -1,0 +1,53 @@
+name: "Read-Grep-Bash Agent"
+
+authors:
+  - name: "Alexis Fox"
+    affiliation: "DukeNLP"
+    url: "https://alexisfox.dev/"
+    twitter: "https://x.com/alexisxfox"
+  - name: "Junlin Wang"
+    affiliation: "DukeNLP"
+    url: "https://isthatyou.github.io/"
+    twitter: "https://x.com/JunlinWang3"
+  - name: "Paul Rosu"
+    affiliation: "DukeNLP"
+    twitter: "https://x.com/PaulRosu11"
+  - name: "Bhuwan Dhingra"
+    affiliation: "DukeNLP"
+    url: "https://users.cs.duke.edu/~bdhingra/"
+    twitter: "https://x.com/bhuwandhingra"
+
+citation: >
+  @misc{fox2026hillclimbing_arcagi3,
+    author = {Fox, Alexis and Wang, Junlin and Rosu, Paul and Dhingra, Bhuwan},
+    title  = {Hill-climbing ARC-AGI-3},
+    url    = {https://hillclimbarcagi3.notion.site/},
+    year   = {2026}
+  }
+
+description: >
+  We built RGB-Agent on an OpenCode harness running Opus 4.6. Our agent (1) plans in-context by
+  continuously appending its strategy to a running log and (2) analyzes raw, uncompressed game logs
+  using a minimal set of CLI tools (READ, GREP, and BASH with Python) to infer game dynamics and
+  plan actions.
+
+code_url: "https://github.com/alexisfox7/RGB-Agent"
+
+paper_url: "https://blog.alexisfox.dev/arcagi3"
+twitter_url: "https://x.com/alexisxfox/status/2030745750330642502?s=20"
+
+versions:
+  - version: "1.0"
+    date: 2026-03-13
+    changes: "Initial submission"
+    models:
+      - name: "Claude Opus 4.6"
+    scores:
+      - benchmark: "arc-agi-3"
+        score: 82.43
+        set: "public"
+        scorecard_url:
+          - "https://three.arcprize.org/scorecards/35d7852f-bb5c-4d40-b0e0-df501c27ef6f"
+          - "https://three.arcprize.org/scorecards/4bded786-ba8f-4dd6-a264-357b9c6ad28d"
+          - "https://three.arcprize.org/scorecards/8ffdceed-e57a-499c-8525-72e1c7ecc4ba"
+        cost: 178.60
