@@ -14,7 +14,7 @@ versions:
     date: 2026-04-01
     changes: "Initial submission"
     models:
-      - name: "Grok-4.20 beta"
+      - name: "claude"
     scores:
       - benchmark: "arc-agi-3"
         score: 26.0
