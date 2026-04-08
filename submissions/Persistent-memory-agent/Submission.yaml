@@ -2,7 +2,7 @@ name: "Persistence in Agentic Memory (PMLL)"
 
 authors:
   - name: "Josef Edwards"
-    twitter: "https://x.com/_jk_drq"
+    twitter: "https://x.com/jk_drq"
 
 description: >
   Inspired by DreamCoder, uses an LLM (Grok-4) to generate Python programs that
