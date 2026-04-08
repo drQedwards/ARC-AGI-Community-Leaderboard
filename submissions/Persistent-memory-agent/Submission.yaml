@@ -1,1 +1,30 @@
+name: "Persistence in Agentic Memory (PMLL)"
 
+authors:
+  - name: "Josef Edwards"
+    twitter: "https://x.com/_jk_drq"
+
+description: >
+  Inspired by DreamCoder, uses an LLM (Grok-4) to generate Python programs that
+  solve ARC tasks while maintaining an expanding library of previously successful
+  programs. The LLM evolves increasingly sophisticated programs by building on
+  prior solutions.
+
+code_url: "https://github.com/drqedwards/ppm"
+
+paper_url: "https://www.techrxiv.org/doi/full/10.36227/techrxiv.175613226.63459477/v1"
+versions:
+  - version: "1.0"
+    date: 2025-09-01
+    changes: "Initial submission"
+    models:
+      - name: "Grok-4.20 beta"
+    scores:
+      - benchmark: "arc-agi-3"
+        score: 26.0
+        set: "public"
+        cost: 50.00
+      - benchmark: "arc-agi-2"
+        score: 0.0
+        set: "semi-private"
+        cost: 0.40
