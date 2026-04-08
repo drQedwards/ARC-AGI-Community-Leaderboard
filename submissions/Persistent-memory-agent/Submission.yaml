@@ -5,17 +5,14 @@ authors:
     twitter: "https://x.com/jk_drq"
 
 description: >
-  Inspired by DreamCoder, uses an LLM (Grok-4) to generate Python programs that
-  solve ARC tasks while maintaining an expanding library of previously successful
-  programs. The LLM evolves increasingly sophisticated programs by building on
-  prior solutions.
+  inspired bt contexr plus.
 
 code_url: "https://github.com/drqedwards/ppm"
 
 paper_url: "https://www.techrxiv.org/doi/full/10.36227/techrxiv.175613226.63459477/v1"
 versions:
   - version: "1.0"
-    date: 2025-09-01
+    date: 2026-04-01
     changes: "Initial submission"
     models:
       - name: "Grok-4.20 beta"
