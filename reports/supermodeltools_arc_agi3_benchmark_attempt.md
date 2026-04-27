@@ -28,6 +28,11 @@ Date (UTC): 2026-04-27
 
 ## Scorecard finalization requested
 
+
+
+### Score formula
+In this repo's local scorecard graph, `final_scorecard_score` is set to the final node's `solved_rate` (a 0.0–1.0 ratio).
+So **1.0 = 100% solved in this local synthetic run**, not ARC leaderboard points.
 Updated `scripts/build_scorecard_graph.py` to close scorecards after graph generation and emit closure status:
 - closes each created scorecard via `ScorecardManager.close_scorecard(...)`
 - writes `reports/scorecard_closure_result.json`
