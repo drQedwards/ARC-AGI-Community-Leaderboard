@@ -1,5 +1,6 @@
 {
   "timestamp_utc": "2026-04-27T23:18:51.715795+00:00",
+  "timestamp_utc": "2026-04-27T22:59:18.520569+00:00",
   "game_id": "arc-agi-3-sprite-clicks",
   "episodes_total": 3,
   "episodes_with_path": 3,
@@ -25,7 +26,6 @@
       "used_memory_reload": false
     }
   ],
-  "supermodel_api_attempts": [],
   "final_score": {
     "solved_rate": 1.0,
     "least_clicks_best_episode": 3,

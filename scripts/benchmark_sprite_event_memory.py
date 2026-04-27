@@ -4,6 +4,7 @@ import os
 from datetime import datetime, timezone
 from pathlib import Path
 
+
 API_URL = "https://api.supermodeltools.com/v1/graphs/supermodel"
 
 
@@ -30,11 +31,6 @@ def shortest_path(start, goal, edges):
 
 
 def try_load_graph_from_supermodel_api(game_id: str, api_key: str):
-    try:
-        import requests
-    except ImportError as e:
-        return None, f"requests_not_installed: {e}"
-
     headers = {"Authorization": f"Bearer {api_key}", "Accept": "application/json"}
     payload = {"game_id": game_id}
     try:

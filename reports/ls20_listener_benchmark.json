@@ -1,5 +1,5 @@
 {
-  "timestamp_utc": "2026-04-27T23:18:53.364904+00:00",
+  "timestamp_utc": "2026-04-27T23:07:50.671548+00:00",
   "task_url": "https://arcprize.org/tasks/ls20",
   "listener_controls": [
     "Space Bar",
@@ -24,7 +24,6 @@
     ]
   },
   "prune_rule": "drop incomplete attempts and complete attempts with clicks > best_complete_clicks",
-  "supermodel_api_graph_attempt": null,
   "final_score": {
     "best_clicks": 4,
     "speed_objective": "minimize clicks"

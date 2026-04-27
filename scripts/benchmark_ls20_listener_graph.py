@@ -3,6 +3,8 @@ import os
 from datetime import datetime, timezone
 from pathlib import Path
 
+import requests
+
 API_URL = "https://api.supermodeltools.com/v1/graphs/supermodel"
 
 
@@ -48,14 +50,6 @@ def main():
     api_status = None
     api_key = os.getenv("SUPERMODEL_API_KEY", "")
     if api_key:
-        requests = None
-        try:
-            import requests
-        except ImportError as e:
-            api_status = f"requests_not_installed: {e}"
-        try:
-            if requests is None:
-                raise RuntimeError("requests not available")
             r = requests.post(
                 API_URL,
                 headers={"Authorization": f"Bearer {api_key}", "Accept": "application/json"},

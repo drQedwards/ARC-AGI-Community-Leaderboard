@@ -25,14 +25,3 @@ versions:
         score: 0.0
         set: "semi-private"
         cost: 0.40
-  - version: "1.1"
-    date: 2026-04-09
-    changes: "PMLL run tuned with Context Plus and RGB models; no mistakes on ARC-AGI-3 public evaluation."
-    models:
-      - name: "Context Plus"
-      - name: "RGB-Agent"
-    scores:
-      - benchmark: "arc-agi-3"
-        score: 100.0
-        set: "public"
-        cost: 0.00
