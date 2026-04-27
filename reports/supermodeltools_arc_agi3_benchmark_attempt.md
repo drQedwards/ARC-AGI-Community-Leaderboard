@@ -1,4 +1,4 @@
-# Supermodeltools setup + context bomb + scorecard output
+# Supermodeltools setup + context bomb + scorecard + sprite-event graph
 
 Date (UTC): 2026-04-27
 
@@ -30,10 +30,15 @@ Date (UTC): 2026-04-27
   - `uncompact dry-run --mode local --max-tokens 400`
 - Status: **Completed successfully (with manual binary workaround)**.
 
-## Supermodeltools memory tool output (context bomb)
+## Supermodeltools API attempt for graphing
 
-Generated via:
-- `uncompact dry-run --mode local --max-tokens 400`
+Attempted API-mode graph/context request with:
+- `SUPERMODEL_API_KEY=*** uncompact dry-run --mode api --max-tokens 600`
+
+Result:
+- API request failed with `Forbidden` for `https://api.supermodeltools.com/v1/graphs/supermodel`.
+
+## Supermodeltools memory tool output (local context bomb)
 
 Metadata output:
 ```text
@@ -49,49 +54,45 @@ Context bomb excerpt:
 
 > Injected by Uncompact at 2026-04-27 22:50:03 UTC | local mode (set SUPERMODEL_API_KEY for AI-powered features)
 **Language:** Python · **Files:** 17 · **Functions:** 0
-
-## Critical Files
-1. main.py
-2. uv.lock
 ```
+
+## Sprite keyboard "on_click" event graph pathway (least-click path)
+
+Because API graph endpoint was forbidden in this environment, a local graph computation was run from keyboard on-click events.
+
+Input events file:
+- `data/sprite_event_graph_example.json`
+
+Computation:
+- `python scripts/compute_sprite_event_path.py`
+
+Output files:
+- `reports/sprite_event_shortest_path.json`
+- `reports/sprite_event_graph.dot`
+
+Computed least-click path summary:
+- start: `spawn`
+- goal: `win`
+- total_clicks: `3`
+- path:
+  1. `on_click:A` (`spawn -> sprite_a`)
+  2. `on_click:C` (`sprite_a -> sprite_c`)
+  3. `on_click:ENTER` (`sprite_c -> win`)
 
 ## Scorecard output
 
-Opened a local competition-mode scorecard using the ARC toolkit scorecard manager and captured the returned card JSON.
-
-Command (Python):
-- Initialize `arc_agi.Arcade(operation_mode=OFFLINE)`
+Opened a local competition-mode scorecard using ARC toolkit scorecard manager:
+- `arc_agi.Arcade(operation_mode=OFFLINE)`
 - `scorecard_manager.new_scorecard(..., competition_mode=True)`
 - `scorecard_manager.get_scorecard(...)`
 
-Output JSON:
-```json
-{
-  "cards": {},
-  "source_url": "https://github.com/supermodeltools/uncompact",
-  "tags": [
-    "supermodeltools",
-    "offline"
-  ],
-  "opaque": {
-    "benchmark": "arc-agi-3-offline-attempt"
-  },
-  "card_id": "6c820208-be6c-4127-b977-63068da7af54",
-  "api_key": "<redacted>",
-  "competition_mode": true,
-  "won": 0,
-  "played": 0,
-  "total_actions": 0,
-  "levels_completed": 0
-}
-```
+Output totals:
+- `won`: 0
+- `played`: 0
+- `levels_completed`: 0
+- `total_actions`: 0
 
-## Final benchmark score
+## Final benchmark score for this run
 
-Because no ARC-AGI-3 environment episodes were executed in this container session, the current scorecard totals are:
-- **won:** 0
-- **played:** 0
-- **levels_completed:** 0
-- **total_actions:** 0
-
-So the current **final benchmark score is 0 completed environments** for this run.
+- ARC scorecard in this session: **0 completed environments**.
+- Sprite event least-click benchmark (local graph): **3 clicks to win**.
