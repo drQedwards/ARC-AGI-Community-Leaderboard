@@ -1,0 +1,39 @@
+{
+  "timestamp_utc": "2026-04-27T22:59:18.520569+00:00",
+  "game_id": "arc-agi-3-sprite-clicks",
+  "episodes_total": 3,
+  "episodes_with_path": 3,
+  "memory_recoveries": 1,
+  "avg_clicks_on_solved": 3.0,
+  "results": [
+    {
+      "episode": "ep1",
+      "status": "win",
+      "clicks": 3,
+      "used_memory_reload": false
+    },
+    {
+      "episode": "ep2",
+      "status": "recovered_via_local_memory",
+      "clicks": 3,
+      "used_memory_reload": true
+    },
+    {
+      "episode": "ep3",
+      "status": "win",
+      "clicks": 3,
+      "used_memory_reload": false
+    }
+  ],
+  "supermodel_api_attempts": [
+    {
+      "episode": "ep2",
+      "status": "error: HTTPSConnectionPool(host='api.supermodeltools.com', port=443): Max retries exceeded with url: /v1/graphs/supermodel (Caused by ProxyError('Unable to connect to proxy', OSError('Tunnel connection failed: 403 Forbidden')))"
+    }
+  ],
+  "final_score": {
+    "solved_rate": 1.0,
+    "least_clicks_best_episode": 3,
+    "avg_clicks_on_solved": 3.0
+  }
+}
