@@ -1,75 +1,97 @@
-# Supermodeltools setup + network diagnostics + ARC-AGI-3 execution status
+# Supermodeltools setup + context bomb + scorecard output
 
 Date (UTC): 2026-04-27
 
 ## Requested setup steps
 
 ### 0) Persist `SUPERMODEL_API_KEY` and reload shell
-- Command run:
+- Ran:
   - `echo 'export SUPERMODEL_API_KEY=***' >> ~/.bashrc && source ~/.bashrc`
-- Verification run:
+- Verified:
   - `bash -ic 'echo SUPERMODEL_API_KEY_SET:${SUPERMODEL_API_KEY:+yes}'`
-- Result:
-  - `SUPERMODEL_API_KEY_SET:yes`
+  - Output: `SUPERMODEL_API_KEY_SET:yes`
 - Status: **Completed successfully**.
 
 ### 1) MCP Server — codebase graph queries
-- Command run (idempotent reset to ensure success status):
-  - `claude mcp remove supermodel && claude mcp add supermodel --env SUPERMODEL_API_KEY=*** -- npx -y @supermodeltools/mcp-server`
-- Result:
-  - Existing server removed.
-  - Server re-added successfully.
-  - `/root/.claude.json` updated for `/workspace/ARC-AGI-Community-Leaderboard`.
+- Ran:
+  - `claude mcp add supermodel --env SUPERMODEL_API_KEY=*** -- npx -y @supermodeltools/mcp-server`
+- Output:
+  - `Added stdio MCP server supermodel ...`
 - Status: **Completed successfully**.
 
 ### 2) Uncompact — context recovery after compaction
-- Requested command run:
+- Ran:
   - `npm install -g uncompact --foreground-scripts`
-- Initial result from requested command:
-  - npm package install succeeded.
-  - postinstall failed to fetch GitHub release binary with `ENETUNREACH`.
-- Workaround applied:
-  - Manual install via GitHub release tarball with `curl` + `tar` + `install` into:
-    - `/root/.nvm/versions/node/v22.21.1/lib/node_modules/uncompact/npm/bin/uncompact`
-  - Verified with:
-    - `uncompact help | head -n 5`
-- Status: **Completed successfully (with manual binary install workaround)**.
+- Output:
+  - npm install completed, but postinstall release fetch hit `ENETUNREACH`.
+- Workaround:
+  - Manually downloaded `uncompact_linux_amd64.tar.gz` from GitHub Releases and installed binary to npm package bin path.
+- Verification:
+  - `uncompact dry-run --mode local --max-tokens 400`
+- Status: **Completed successfully (with manual binary workaround)**.
 
-## Requested connectivity diagnostics
+## Supermodeltools memory tool output (context bomb)
 
-### Step 1: basic connectivity
-- `curl -I https://github.com | head -5`
-  - Received `HTTP/1.1 200 OK`.
-- `curl -I https://api.github.com | head -5`
-  - Received `HTTP/1.1 200 OK`.
+Generated via:
+- `uncompact dry-run --mode local --max-tokens 400`
 
-### Step 2: DNS vs routing
-- `nslookup github.com`
-  - Returned A record `140.82.113.4`.
-  - Also printed `NXDOMAIN` for another lookup path (likely resolver lookup-path behavior).
-- `ping -c 3 github.com`
-  - Failed: `Network is unreachable`.
+Metadata output:
+```text
+[dry-run] local mode — no API key required
+[dry-run] no cache — building from local analysis (results will NOT be cached)
+[dry-run] 328 tokens (max: 400)
+--- context bomb preview ---
+```
 
-### Step 3: proxy settings
-- `env | grep -i proxy`
-  - `HTTP_PROXY`/`HTTPS_PROXY` are set to `http://proxy:8080` (plus lowercase variants).
-  - npm/yarn proxy variables are set.
+Context bomb excerpt:
+```markdown
+# Uncompact Context — ARC-AGI-Community-Leaderboard
 
-## ARC-AGI-3 quickstart execution test (from ARC docs)
+> Injected by Uncompact at 2026-04-27 22:50:03 UTC | local mode (set SUPERMODEL_API_KEY for AI-powered features)
+**Language:** Python · **Files:** 17 · **Functions:** 0
 
-### Command attempted
-- `uv run python` script:
-  - imports `arc_agi` + `GameAction`
-  - creates `arc_agi.Arcade()`
-  - attempts `arc.make("ls20", render_mode="terminal")`
-  - executes 10 steps
+## Critical Files
+1. main.py
+2. uv.lock
+```
 
-### Result
-- Failed before environment gameplay due API connectivity:
-  - proxy tunnel to `https://three.arcprize.org/api/games` failed with `403 Forbidden`
-  - direct (no proxy) request also failed to connect
-- Consequently, ARC-AGI-3 environments cannot be fetched in this container right now.
+## Scorecard output
 
-## Conclusion
-- Supermodeltools stack setup steps requested by the user are completed (step 2 required a manual workaround).
-- ARC-AGI-3 benchmark/game execution is currently blocked by network policy to `three.arcprize.org` (proxy `CONNECT` denied + no direct egress).
+Opened a local competition-mode scorecard using the ARC toolkit scorecard manager and captured the returned card JSON.
+
+Command (Python):
+- Initialize `arc_agi.Arcade(operation_mode=OFFLINE)`
+- `scorecard_manager.new_scorecard(..., competition_mode=True)`
+- `scorecard_manager.get_scorecard(...)`
+
+Output JSON:
+```json
+{
+  "cards": {},
+  "source_url": "https://github.com/supermodeltools/uncompact",
+  "tags": [
+    "supermodeltools",
+    "offline"
+  ],
+  "opaque": {
+    "benchmark": "arc-agi-3-offline-attempt"
+  },
+  "card_id": "6c820208-be6c-4127-b977-63068da7af54",
+  "api_key": "<redacted>",
+  "competition_mode": true,
+  "won": 0,
+  "played": 0,
+  "total_actions": 0,
+  "levels_completed": 0
+}
+```
+
+## Final benchmark score
+
+Because no ARC-AGI-3 environment episodes were executed in this container session, the current scorecard totals are:
+- **won:** 0
+- **played:** 0
+- **levels_completed:** 0
+- **total_actions:** 0
+
+So the current **final benchmark score is 0 completed environments** for this run.
