@@ -1,4 +1,4 @@
-# Supermodeltools setup + benchmark rerun + competition-mode status
+# Supermodeltools setup + full memory graph export + ARC-AGI-3 (7-game) score
 
 Date (UTC): 2026-04-27
 
@@ -28,47 +28,51 @@ Date (UTC): 2026-04-27
   - Manual install of `uncompact_linux_amd64.tar.gz` into npm package bin path.
 - Status: **Completed successfully (with manual binary workaround)**.
 
-## Fixes applied from review comments
+## Full memory graph export (CLI + API attempt)
 
-1. Removed unconditional `requests` import in:
-   - `scripts/benchmark_sprite_event_memory.py`
-   - `scripts/benchmark_ls20_listener_graph.py`
-2. Both scripts now run local-only paths even when `requests` is not installed.
-3. Replaced binary submission artifact:
-   - removed `submissions/scorecard_graph.parquet`
-   - added text artifact `submissions/scorecard_graph.csv`
-
-## Benchmarks re-run
+Runner:
+- `scripts/export_supermodel_memory_graph.py`
 
 Executed:
-- `python scripts/benchmark_sprite_event_memory.py`
-- `python scripts/benchmark_ls20_listener_graph.py`
-- `python scripts/compute_sprite_event_path.py`
-- `python scripts/build_scorecard_graph.py`
+- `python scripts/export_supermodel_memory_graph.py`
+
+Outputs:
+- Full local memory/disc string: `reports/supermodel_memory_graph_full.txt`
+- API attempt output file: `reports/supermodel_memory_graph_api_attempt.txt`
+- Run metadata/status: `reports/supermodel_memory_graph_result.json`
+
+Observed status:
+- local CLI export: success (`return_code=0`)
+- API CLI export: failed (`return_code=1`, `Forbidden` on `api.supermodeltools.com/v1/graphs/supermodel`)
+
+## ARC-AGI-3 competition mode benchmark (all 7 games)
+
+Runner:
+- `scripts/run_arcagi3_competition_mode.py`
+
+Executed:
 - `uv run python scripts/run_arcagi3_competition_mode.py`
 
-Outputs refreshed:
-- `reports/sprite_event_memory_benchmark.json`
-- `reports/ls20_listener_benchmark.json`
-- `reports/sprite_event_shortest_path.json`
-- `reports/scorecard_graph.json`
+Target games (7):
+- `ls20`, `ft09`, `bb24`, `ag06`, `hz17`, `dd33`, `rm15`
+
+Result artifact:
 - `reports/arcagi3_competition_mode_result.json`
-- `submissions/scorecard_graph.csv`
 
-## Competition-mode rerun result
-
-- mode: `competition`
+Current ARC-AGI-3 score in this environment:
 - available_environments: `0`
-- `ls20` / `ft09` attempts: failed
 - scorecard_opened: `false`
-- status: `blocked_opening_scorecard`
+- final_score_7_games:
+  - games_attempted: `7`
+  - games_played_successfully: `0`
+  - games_failed: `7`
+  - success_rate: `0.0`
 
-Blocking cause remains environment network policy:
-- proxy tunnel `403 Forbidden` for `three.arcprize.org` endpoints (`/api/games`, `/api/scorecard/open`).
+Blocking cause:
+- Proxy/network policy blocks `three.arcprize.org` endpoints (`/api/games`, `/api/scorecard/open`) with tunnel `403` (and one `502`) responses.
 
-## Final benchmark summary for this rerun
+## Final score summary
 
-- LS20 listener-chain best_clicks: **4**
-- Sprite shortest path best_clicks: **3**
-- Sprite memory-reload solved_rate: **1.0**
-- Competition-mode full ARC-AGI-3 benchmark: **blocked by proxy 403**
+- ARC-AGI-3 current score (7-game run): **0 / 7 successful**
+- ARC-AGI-3 7-game success rate: **0.0**
+- Supermodeltools full local memory graph string exported to `reports/supermodel_memory_graph_full.txt`

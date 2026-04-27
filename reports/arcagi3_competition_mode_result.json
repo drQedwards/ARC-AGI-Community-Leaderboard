@@ -1,5 +1,5 @@
 {
-  "timestamp_utc": "2026-04-27T23:18:56.962673+00:00",
+  "timestamp_utc": "2026-04-27T23:25:02.809874+00:00",
   "mode": "competition",
   "arc_api_key_used": "940cff7a-fce5-436c-a164-2ca9a7ea32c5",
   "available_environments": 0,
@@ -13,10 +13,41 @@
       "game_id": "ft09",
       "status": "failed",
       "error": "HTTPSConnectionPool(host='three.arcprize.org', port=443): Max retries exceeded with url: /api/scorecard/open (Caused by ProxyError('Unable to connect to proxy', OSError('Tunnel connection failed: 403 Forbidden')))"
+    },
+    {
+      "game_id": "bb24",
+      "status": "failed",
+      "error": "HTTPSConnectionPool(host='three.arcprize.org', port=443): Max retries exceeded with url: /api/scorecard/open (Caused by ProxyError('Unable to connect to proxy', OSError('Tunnel connection failed: 403 Forbidden')))"
+    },
+    {
+      "game_id": "ag06",
+      "status": "failed",
+      "error": "HTTPSConnectionPool(host='three.arcprize.org', port=443): Max retries exceeded with url: /api/scorecard/open (Caused by ProxyError('Unable to connect to proxy', OSError('Tunnel connection failed: 403 Forbidden')))"
+    },
+    {
+      "game_id": "hz17",
+      "status": "failed",
+      "error": "HTTPSConnectionPool(host='three.arcprize.org', port=443): Max retries exceeded with url: /api/scorecard/open (Caused by ProxyError('Unable to connect to proxy', OSError('Tunnel connection failed: 403 Forbidden')))"
+    },
+    {
+      "game_id": "dd33",
+      "status": "failed",
+      "error": "HTTPSConnectionPool(host='three.arcprize.org', port=443): Max retries exceeded with url: /api/scorecard/open (Caused by ProxyError('Unable to connect to proxy', OSError('Tunnel connection failed: 502 Bad Gateway')))"
+    },
+    {
+      "game_id": "rm15",
+      "status": "failed",
+      "error": "HTTPSConnectionPool(host='three.arcprize.org', port=443): Max retries exceeded with url: /api/scorecard/open (Caused by ProxyError('Unable to connect to proxy', OSError('Tunnel connection failed: 403 Forbidden')))"
     }
   ],
   "scorecard_opened": false,
   "scorecard": null,
   "status": "blocked_opening_scorecard",
+  "final_score_7_games": {
+    "games_attempted": 7,
+    "games_played_successfully": 0,
+    "games_failed": 7,
+    "success_rate": 0.0
+  },
   "scorecard_error": "HTTPSConnectionPool(host='three.arcprize.org', port=443): Max retries exceeded with url: /api/scorecard/open (Caused by ProxyError('Unable to connect to proxy', OSError('Tunnel connection failed: 403 Forbidden')))"
 }

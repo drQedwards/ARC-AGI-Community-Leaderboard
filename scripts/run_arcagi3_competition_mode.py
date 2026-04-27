@@ -26,7 +26,8 @@ def main():
         arc = arc_agi.Arcade(operation_mode=OperationMode.COMPETITION, arc_api_key=arc_api_key)
         result["available_environments"] = len(arc.available_environments)
 
-        target_games = [e.game_id for e in arc.available_environments[:10]] or ["ls20", "ft09"]
+        default_7_games = ["ls20", "ft09", "bb24", "ag06", "hz17", "dd33", "rm15"]
+        target_games = [e.game_id for e in arc.available_environments[:7]] or default_7_games
 
         for game_id in target_games:
             item = {"game_id": game_id, "status": "not_started", "error": None}
@@ -42,6 +43,17 @@ def main():
                 item["status"] = "failed"
                 item["error"] = str(e)
             result["games_attempted"].append(item)
+
+        solved = sum(1 for g in result["games_attempted"] if g["status"] == "played_5_actions")
+        failed = sum(1 for g in result["games_attempted"] if g["status"] == "failed")
+        result["final_score_7_games"] = {
+            "games_attempted": len(result["games_attempted"]),
+            "games_played_successfully": solved,
+            "games_failed": failed,
+            "success_rate": round(solved / len(result["games_attempted"]), 3)
+            if result["games_attempted"]
+            else 0.0,
+        }
 
         try:
             sc = arc.get_scorecard()

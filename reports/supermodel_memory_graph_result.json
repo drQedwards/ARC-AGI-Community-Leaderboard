@@ -1,0 +1,15 @@
+{
+  "timestamp_utc": "2026-04-27T23:24:58.883357+00:00",
+  "local_cli": {
+    "return_code": 0,
+    "stderr": "[dry-run] local mode \u2014 no API key required\n[dry-run] no cache \u2014 building from local analysis (results will NOT be cached)\n[dry-run] 580 tokens (max: 12000)\n--- context bomb preview ---",
+    "output_file": "reports/supermodel_memory_graph_full.txt",
+    "output_chars": 2318
+  },
+  "api_cli": {
+    "return_code": 1,
+    "stderr": "[uncompact] \u26a0\ufe0f API key validation failed: auth check failed: Get \"https://api.supermodeltools.com/v1/graphs/supermodel\": Forbidden\n[dry-run] no cache \u2014 fetching from API (results will NOT be cached)\nAPI error: API unreachable: Post \"https://api.supermodeltools.com/v1/graphs/supermodel\": Forbidden",
+    "output_file": "reports/supermodel_memory_graph_api_attempt.txt",
+    "output_chars": 0
+  }
+}
