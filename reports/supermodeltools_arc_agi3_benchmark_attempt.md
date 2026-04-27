@@ -33,6 +33,21 @@ Date (UTC): 2026-04-27
 ### Score formula
 In this repo's local scorecard graph, `final_scorecard_score` is set to the final node's `solved_rate` (a 0.0–1.0 ratio).
 So **1.0 = 100% solved in this local synthetic run**, not ARC leaderboard points.
+
+## Workflow kickstart (local)
+
+Ran local equivalents for:
+- CI
+- Validate Submission
+- Zapier Webhook (dry run)
+
+Command:
+- `./scripts/kickstart_workflows_local.sh`
+
+Results:
+- CI smoke: passed
+- Validate Submission: passed (no changed submission files)
+- Zapier webhook: local dry-run payload generated at `reports/zapier_webhook_dry_run_payload.json`
 Updated `scripts/build_scorecard_graph.py` to close scorecards after graph generation and emit closure status:
 - closes each created scorecard via `ScorecardManager.close_scorecard(...)`
 - writes `reports/scorecard_closure_result.json`
