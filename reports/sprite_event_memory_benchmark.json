@@ -1,4 +1,5 @@
 {
+  "timestamp_utc": "2026-04-27T23:18:51.715795+00:00",
   "timestamp_utc": "2026-04-27T22:59:18.520569+00:00",
   "game_id": "arc-agi-3-sprite-clicks",
   "episodes_total": 3,
@@ -23,12 +24,6 @@
       "status": "win",
       "clicks": 3,
       "used_memory_reload": false
-    }
-  ],
-  "supermodel_api_attempts": [
-    {
-      "episode": "ep2",
-      "status": "error: HTTPSConnectionPool(host='api.supermodeltools.com', port=443): Max retries exceeded with url: /v1/graphs/supermodel (Caused by ProxyError('Unable to connect to proxy', OSError('Tunnel connection failed: 403 Forbidden')))"
     }
   ],
   "final_score": {

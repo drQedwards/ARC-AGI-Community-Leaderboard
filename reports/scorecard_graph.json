@@ -1,0 +1,49 @@
+{
+  "generated_at": "2026-04-27T23:29:16.958679+00:00",
+  "metric": "score recorder",
+  "nodes": [
+    {
+      "card_id": "cb4aa70f-c1dc-4cc6-83c8-a24d2d62a0e2",
+      "stage": "baseline",
+      "best_clicks": 6,
+      "solved_rate": 0.67,
+      "timestamp_utc": "2026-04-27T23:29:16.958409+00:00",
+      "api_key_used": "940cff7a-fce5-436c-a164-2ca9a7ea32c5"
+    },
+    {
+      "card_id": "11054be3-807c-4483-b8a5-39d566d293d3",
+      "stage": "listener_pruned",
+      "best_clicks": 4,
+      "solved_rate": 0.9,
+      "timestamp_utc": "2026-04-27T23:29:16.958559+00:00",
+      "api_key_used": "940cff7a-fce5-436c-a164-2ca9a7ea32c5"
+    },
+    {
+      "card_id": "fe8e5217-cb6a-4293-9b1e-bb1c37b8670f",
+      "stage": "memory_reload",
+      "best_clicks": 3,
+      "solved_rate": 1.0,
+      "timestamp_utc": "2026-04-27T23:29:16.958660+00:00",
+      "api_key_used": "940cff7a-fce5-436c-a164-2ca9a7ea32c5"
+    }
+  ],
+  "edges": [
+    {
+      "from": "cb4aa70f-c1dc-4cc6-83c8-a24d2d62a0e2",
+      "to": "11054be3-807c-4483-b8a5-39d566d293d3",
+      "improvement_clicks": 2,
+      "improvement_solved_rate": 0.23
+    },
+    {
+      "from": "11054be3-807c-4483-b8a5-39d566d293d3",
+      "to": "fe8e5217-cb6a-4293-9b1e-bb1c37b8670f",
+      "improvement_clicks": 1,
+      "improvement_solved_rate": 0.1
+    }
+  ],
+  "final_score": {
+    "card_id": "fe8e5217-cb6a-4293-9b1e-bb1c37b8670f",
+    "best_clicks": 3,
+    "solved_rate": 1.0
+  }
+}

@@ -1,0 +1,8 @@
+digraph scorecard_graph {
+  rankdir=LR;
+  "cb4aa70f-c1dc-4cc6-83c8-a24d2d62a0e2" [label="baseline\nclicks=6\nsolved=0.67"];
+  "11054be3-807c-4483-b8a5-39d566d293d3" [label="listener_pruned\nclicks=4\nsolved=0.9"];
+  "fe8e5217-cb6a-4293-9b1e-bb1c37b8670f" [label="memory_reload\nclicks=3\nsolved=1.0"];
+  "cb4aa70f-c1dc-4cc6-83c8-a24d2d62a0e2" -> "11054be3-807c-4483-b8a5-39d566d293d3" [label="Δclicks=2, Δsolve=0.23"];
+  "11054be3-807c-4483-b8a5-39d566d293d3" -> "fe8e5217-cb6a-4293-9b1e-bb1c37b8670f" [label="Δclicks=1, Δsolve=0.1"];
+}

@@ -24,7 +24,6 @@
     ]
   },
   "prune_rule": "drop incomplete attempts and complete attempts with clicks > best_complete_clicks",
-  "supermodel_api_graph_attempt": "error: HTTPSConnectionPool(host='api.supermodeltools.com', port=443): Max retries exceeded with url: /v1/graphs/supermodel (Caused by ProxyError('Unable to connect to proxy', OSError('Tunnel connection failed: 403 Forbidden')))",
   "final_score": {
     "best_clicks": 4,
     "speed_objective": "minimize clicks"

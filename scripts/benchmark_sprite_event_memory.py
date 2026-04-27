@@ -4,7 +4,6 @@ import os
 from datetime import datetime, timezone
 from pathlib import Path
 
-import requests
 
 API_URL = "https://api.supermodeltools.com/v1/graphs/supermodel"
 
