@@ -1,4 +1,4 @@
-# Supermodeltools setup + sprite memory-reload benchmark
+# Supermodeltools setup + LS20 listener graph benchmark
 
 Date (UTC): 2026-04-27
 
@@ -26,48 +26,57 @@ Date (UTC): 2026-04-27
   - npm install completed, but postinstall release fetch hit `ENETUNREACH`.
 - Workaround:
   - Manual install of `uncompact_linux_amd64.tar.gz` into npm package bin path.
-- Verification:
-  - `uncompact dry-run --mode local --max-tokens 300`
 - Status: **Completed successfully (with manual binary workaround)**.
 
-## Benchmark: sprite event graph reload after game-over
+## LS20 event-listener graph benchmark
 
-Goal:
-- Benchmark the workflow where a `game_over` event triggers graph reload from Supermodeltools API, then falls back to prior memory graph if needed.
+### Listener/control source used
+Direct fetch of `https://arcprize.org/tasks/ls20` is blocked in this runtime by proxy policy, so listener controls were taken from ARC preview game text (same ls20 family controls):
+- Space Bar
+- Click
+- Undo (Z)
+- Reset Level
+- Help
+- Start
 
-### Benchmark inputs/code
-- Dataset: `data/sprite_event_benchmark_cases.json`
-- Runner: `scripts/benchmark_sprite_event_memory.py`
+These controls are encoded in:
+- `data/ls20_listener_attempts.json`
 
-### What the benchmark does
-1. Computes least-click path per episode.
-2. On `game_over`, tries Supermodeltools API graph reload (`/v1/graphs/supermodel`).
-3. If API reload fails, reloads prior successful graph from local memory cache.
-4. Produces a benchmark JSON with solved-rate/click metrics.
+### Benchmark objective
+- Build action-chain graph attempts from listener/button events.
+- Keep only the shortest complete chain to win.
+- Prune incomplete attempts and any complete attempt longer than the current best.
+- Attempt Supermodeltools API graph reload for LS20 and record status.
+
+### Runner
+- `scripts/benchmark_ls20_listener_graph.py`
+
+### Output artifacts
+- `reports/ls20_listener_benchmark.json`
+- `reports/ls20_listener_graph.dot`
 
 ### Run result
-Executed with API key set:
-- `SUPERMODEL_API_KEY=*** python scripts/benchmark_sprite_event_memory.py`
+Executed:
+- `SUPERMODEL_API_KEY=*** python scripts/benchmark_ls20_listener_graph.py`
 
 Result summary:
-- episodes_total: **3**
-- episodes_with_path: **3**
-- memory_recoveries: **1**
-- avg_clicks_on_solved: **3.0**
-- final solved_rate: **1.0**
-- least_clicks_best_episode: **3**
+- attempts_total: **4**
+- attempts_complete: **3**
+- pruned_attempts_kept: **1**
+- best_attempt: `a3`
+- best_clicks: **4**
 
-API call status during game-over recovery:
-- API attempt returned proxy-tunnel `403 Forbidden` for `api.supermodeltools.com`
-- Recovery succeeded via local memory graph reload.
+Supermodeltools API attempt:
+- `api.supermodeltools.com/v1/graphs/supermodel` request attempted for `game_id=ls20`
+- result: proxy tunnel `403 Forbidden` in this environment
 
-## Output artifacts
-- `reports/sprite_event_memory_benchmark.json` (benchmark output)
-- `reports/sprite_event_shortest_path.json` (least-click path)
-- `reports/sprite_event_graph.dot` (graphviz representation)
+## Additional memory-reload benchmark outputs
+- `reports/sprite_event_memory_benchmark.json` (game-over recovery benchmark)
+- `reports/sprite_event_shortest_path.json`
+- `reports/sprite_event_graph.dot`
 
 ## Final benchmark score for this run
 
+- **LS20 listener-chain best_clicks: 4**
 - **Sprite memory-reload solved_rate: 1.0**
-- **Best least-click path: 3 clicks**
-- **Average clicks on solved episodes: 3.0**
+- **Sprite best least-click path: 3**
