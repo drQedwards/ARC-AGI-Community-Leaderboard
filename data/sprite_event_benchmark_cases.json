@@ -1,0 +1,39 @@
+{
+  "game_id": "arc-agi-3-sprite-clicks",
+  "episodes": [
+    {
+      "id": "ep1",
+      "start": "spawn",
+      "goal": "win",
+      "outcome": "win",
+      "edges": [
+        {"from": "spawn", "to": "sprite_a", "event": "on_click:A", "clicks": 1},
+        {"from": "spawn", "to": "sprite_b", "event": "on_click:B", "clicks": 1},
+        {"from": "sprite_a", "to": "sprite_c", "event": "on_click:C", "clicks": 1},
+        {"from": "sprite_c", "to": "win", "event": "on_click:ENTER", "clicks": 1},
+        {"from": "sprite_b", "to": "win", "event": "on_click:ENTER", "clicks": 4}
+      ]
+    },
+    {
+      "id": "ep2",
+      "start": "spawn",
+      "goal": "win",
+      "outcome": "game_over",
+      "edges": [
+        {"from": "spawn", "to": "hazard", "event": "on_click:B", "clicks": 1},
+        {"from": "hazard", "to": "game_over", "event": "on_click:ENTER", "clicks": 1}
+      ]
+    },
+    {
+      "id": "ep3",
+      "start": "spawn",
+      "goal": "win",
+      "outcome": "win",
+      "edges": [
+        {"from": "spawn", "to": "sprite_a", "event": "on_click:A", "clicks": 1},
+        {"from": "sprite_a", "to": "sprite_c", "event": "on_click:C", "clicks": 1},
+        {"from": "sprite_c", "to": "win", "event": "on_click:ENTER", "clicks": 1}
+      ]
+    }
+  ]
+}

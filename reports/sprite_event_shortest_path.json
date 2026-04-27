@@ -1,0 +1,25 @@
+{
+  "start": "spawn",
+  "goal": "win",
+  "total_clicks": 3,
+  "path": [
+    {
+      "from": "spawn",
+      "to": "sprite_a",
+      "event": "on_click:A",
+      "clicks": 1
+    },
+    {
+      "from": "sprite_a",
+      "to": "sprite_c",
+      "event": "on_click:C",
+      "clicks": 1
+    },
+    {
+      "from": "sprite_c",
+      "to": "win",
+      "event": "on_click:ENTER",
+      "clicks": 1
+    }
+  ]
+}

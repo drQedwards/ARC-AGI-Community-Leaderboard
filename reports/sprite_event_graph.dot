@@ -1,0 +1,10 @@
+digraph sprite_events {
+  rankdir=LR;
+  "spawn" -> "sprite_a" [label="on_click:A / 1", color=red, penwidth=3];
+  "spawn" -> "sprite_b" [label="on_click:B / 1", color=gray, penwidth=1];
+  "sprite_a" -> "sprite_c" [label="on_click:C / 1", color=red, penwidth=3];
+  "sprite_b" -> "sprite_d" [label="on_click:D / 1", color=gray, penwidth=1];
+  "sprite_c" -> "win" [label="on_click:ENTER / 1", color=red, penwidth=3];
+  "sprite_d" -> "win" [label="on_click:ENTER / 2", color=gray, penwidth=1];
+  "sprite_a" -> "win" [label="on_click:ENTER / 3", color=gray, penwidth=1];
+}
