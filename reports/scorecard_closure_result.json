@@ -1,0 +1,26 @@
+{
+  "timestamp_utc": "2026-04-27T23:29:16.960465+00:00",
+  "final_scorecard_score": 1.0,
+  "final_scorecard_best_clicks": 3,
+  "final_scorecard_id": "fe8e5217-cb6a-4293-9b1e-bb1c37b8670f",
+  "closures": [
+    {
+      "card_id": "cb4aa70f-c1dc-4cc6-83c8-a24d2d62a0e2",
+      "closed": true,
+      "guid_count": 0,
+      "game_guid_count": 0
+    },
+    {
+      "card_id": "11054be3-807c-4483-b8a5-39d566d293d3",
+      "closed": true,
+      "guid_count": 0,
+      "game_guid_count": 0
+    },
+    {
+      "card_id": "fe8e5217-cb6a-4293-9b1e-bb1c37b8670f",
+      "closed": true,
+      "guid_count": 0,
+      "game_guid_count": 0
+    }
+  ]
+}

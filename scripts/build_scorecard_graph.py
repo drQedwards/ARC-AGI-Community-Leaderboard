@@ -118,7 +118,30 @@ def main():
                 }
             )
 
-    print(json.dumps(graph_json["final_score"], indent=2))
+    closures = []
+    for n in nodes:
+        closed, guids, gid_guids = sm.close_scorecard(n["card_id"], api_key)
+        closures.append(
+            {
+                "card_id": n["card_id"],
+                "closed": closed is not None,
+                "guid_count": len(guids or []),
+                "game_guid_count": len(gid_guids or []),
+            }
+        )
+
+    closure_json = {
+        "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+        "final_scorecard_score": graph_json["final_score"]["solved_rate"],
+        "final_scorecard_best_clicks": graph_json["final_score"]["best_clicks"],
+        "final_scorecard_id": graph_json["final_score"]["card_id"],
+        "closures": closures,
+    }
+    (repo / "reports" / "scorecard_closure_result.json").write_text(
+        json.dumps(closure_json, indent=2)
+    )
+
+    print(json.dumps(closure_json, indent=2))
 
 
 if __name__ == "__main__":
