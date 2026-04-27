@@ -1,0 +1,32 @@
+{
+  "timestamp_utc": "2026-04-27T23:18:53.364904+00:00",
+  "task_url": "https://arcprize.org/tasks/ls20",
+  "listener_controls": [
+    "Space Bar",
+    "Click",
+    "Undo (Z)",
+    "Reset Level",
+    "Help",
+    "Start"
+  ],
+  "attempts_total": 4,
+  "attempts_complete": 3,
+  "pruned_attempts_kept": 1,
+  "best_attempt": {
+    "attempt_id": "a3",
+    "status": "complete",
+    "clicks": 4,
+    "chain": [
+      "Start",
+      "Click",
+      "Space Bar",
+      "Click"
+    ]
+  },
+  "prune_rule": "drop incomplete attempts and complete attempts with clicks > best_complete_clicks",
+  "supermodel_api_graph_attempt": null,
+  "final_score": {
+    "best_clicks": 4,
+    "speed_objective": "minimize clicks"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "start": "spawn",
+  "goal": "win",
+  "edges": [
+    {"from": "spawn", "to": "sprite_a", "event": "on_click:A", "clicks": 1},
+    {"from": "spawn", "to": "sprite_b", "event": "on_click:B", "clicks": 1},
+    {"from": "sprite_a", "to": "sprite_c", "event": "on_click:C", "clicks": 1},
+    {"from": "sprite_b", "to": "sprite_d", "event": "on_click:D", "clicks": 1},
+    {"from": "sprite_c", "to": "win", "event": "on_click:ENTER", "clicks": 1},
+    {"from": "sprite_d", "to": "win", "event": "on_click:ENTER", "clicks": 2},
+    {"from": "sprite_a", "to": "win", "event": "on_click:ENTER", "clicks": 3}
+  ]
+}

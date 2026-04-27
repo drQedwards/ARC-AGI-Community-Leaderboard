@@ -1,0 +1,8 @@
+digraph ls20_listener_chain {
+  rankdir=LR;
+  "spawn" -> "s1" [label="on_click:Start/1", color=red];
+  "s1" -> "s2" [label="on_click:Click/1", color=red];
+  "s2" -> "s3" [label="on_click:Space Bar/1", color=red];
+  "s3" -> "s4" [label="on_click:Click/1", color=red];
+  "s4" -> "win" [label="win_state/0", color=red];
+}
