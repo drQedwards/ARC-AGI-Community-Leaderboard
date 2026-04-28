@@ -17,6 +17,25 @@ A maintainer reviews and merges submissions on a weekly basis.
 
 Submissions must link to a publicly accessible code repository and report a score on the **public** set of one or more benchmarks. For ARC-AGI-3, submissions must use [Competition Mode](https://docs.arcprize.org/toolkit/competition_mode) and provide a `scorecard_url`. See [CONTRIBUTING.md](CONTRIBUTING.md) for full details.
 
+
+## Script Environment Variables
+
+Some helper scripts in `scripts/` require API keys to be provided via environment variables (no hardcoded secrets):
+
+- `scripts/export_supermodel_memory_graph.py` requires `SUPERMODEL_API_KEY`
+- `scripts/run_arcagi3_competition_mode.py` requires `ARC_API_KEY`
+
+Example:
+
+```bash
+export SUPERMODEL_API_KEY="<your-supermodel-api-key>"
+export ARC_API_KEY="<your-arc-api-key>"
+python scripts/export_supermodel_memory_graph.py
+python scripts/run_arcagi3_competition_mode.py
+```
+
+If a required variable is missing, each script writes a JSON result with `status: "missing_env_var"` and a clear message.
+
 ## Links
 
 - [ARC Prize](https://arcprize.org)
