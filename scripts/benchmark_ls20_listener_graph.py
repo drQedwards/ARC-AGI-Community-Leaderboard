@@ -50,6 +50,7 @@ def main():
     api_status = None
     api_key = os.getenv("SUPERMODEL_API_KEY", "")
     if api_key:
+        try:
             r = requests.post(
                 API_URL,
                 headers={"Authorization": f"Bearer {api_key}", "Accept": "application/json"},
