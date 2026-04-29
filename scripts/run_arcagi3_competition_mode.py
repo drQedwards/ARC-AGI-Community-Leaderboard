@@ -3,6 +3,70 @@ import os
 from datetime import datetime, timezone
 from pathlib import Path
 
+
+def _utc_now() -> str:
+    return datetime.now(timezone.utc).isoformat()
+
+
+def _dependency_error_result(message: str):
+    return {
+        "timestamp_utc": _utc_now(),
+        "mode": "competition",
+        "status": "dependency_missing",
+        "error": message,
+        "scorecard_opened": False,
+        "scorecard": None,
+        "scorecard_closeout": {
+            "attempted": False,
+            "status": "skipped_dependency_missing",
+            "events": [],
+        },
+    }
+
+
+def _close_scorecard_offline(arc_agi_mod, operation_mode, api_key: str, scorecard_obj):
+    closeout = {
+        "attempted": True,
+        "mode": "offline",
+        "timestamp_utc": _utc_now(),
+        "status": "not_started",
+        "events": [],
+    }
+
+    card_id = None
+    if hasattr(scorecard_obj, "model_dump"):
+        payload = scorecard_obj.model_dump()
+        card_id = payload.get("id") or payload.get("card_id")
+    elif isinstance(scorecard_obj, dict):
+        card_id = scorecard_obj.get("id") or scorecard_obj.get("card_id")
+
+    if not card_id:
+        closeout["status"] = "skipped_missing_card_id"
+        return closeout
+
+    closeout["card_id"] = card_id
+
+    try:
+        arc_offline = arc_agi_mod.Arcade(
+            operation_mode=operation_mode.OFFLINE,
+            arc_api_key=api_key,
+        )
+        sm = arc_offline.scorecard_manager
+        closed, guids, gid_guids = sm.close_scorecard(card_id, api_key)
+        closeout["status"] = "closed" if closed is not None else "close_returned_none"
+        closeout["events"].append(
+            {
+                "event": "close_scorecard",
+                "closed": closed is not None,
+                "guid_count": len(guids or []),
+                "game_guid_count": len(gid_guids or []),
+            }
+        )
+    except Exception as e:
+        closeout["status"] = "close_failed"
+        closeout["error"] = str(e)
+
+    return closeout
 REQUIRED_ENV_VAR = "ARC_API_KEY"
 
 
@@ -16,14 +80,30 @@ def main():
     repo = Path(__file__).resolve().parent.parent
     arc_api_key = os.getenv(REQUIRED_ENV_VAR)
 
+    try:
+        import arc_agi
+        from arc_agi.base import OperationMode
+        from arcengine import GameAction
+    except Exception as e:
+        result = _dependency_error_result(str(e))
+        out = repo / "reports" / "arcagi3_competition_mode_result.json"
+        out.write_text(json.dumps(result, indent=2))
+        print(json.dumps(result, indent=2))
+        return
+
     result = {
-        "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+        "timestamp_utc": _utc_now(),
         "mode": "competition",
         "available_environments": 0,
         "games_attempted": [],
         "scorecard_opened": False,
         "scorecard": None,
         "status": "unknown",
+        "scorecard_closeout": {
+            "attempted": False,
+            "status": "skipped_not_completed",
+            "events": [],
+        },
     }
 
     if not arc_api_key:
@@ -78,6 +158,15 @@ def main():
             result["scorecard_opened"] = False
             result["status"] = "blocked_opening_scorecard"
             result["scorecard_error"] = str(e)
+
+        if result["status"] == "completed" and result["scorecard"]:
+            sc_obj = sc if "sc" in locals() else result["scorecard"]
+            result["scorecard_closeout"] = _close_scorecard_offline(
+                arc_agi,
+                OperationMode,
+                arc_api_key,
+                sc_obj,
+            )
 
     except Exception as e:
         result["status"] = "failed_initialization"
