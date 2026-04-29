@@ -1,4 +1,5 @@
 import json
+import os
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -66,11 +67,18 @@ def _close_scorecard_offline(arc_agi_mod, operation_mode, api_key: str, scorecar
         closeout["error"] = str(e)
 
     return closeout
+REQUIRED_ENV_VAR = "ARC_API_KEY"
+
+
+def write_and_print_result(repo: Path, result: dict):
+    out = repo / "reports" / "arcagi3_competition_mode_result.json"
+    out.write_text(json.dumps(result, indent=2))
+    print(json.dumps(result, indent=2))
 
 
 def main():
     repo = Path(__file__).resolve().parent.parent
-    arc_api_key = "940cff7a-fce5-436c-a164-2ca9a7ea32c5"
+    arc_api_key = os.getenv(REQUIRED_ENV_VAR)
 
     try:
         import arc_agi
@@ -86,7 +94,6 @@ def main():
     result = {
         "timestamp_utc": _utc_now(),
         "mode": "competition",
-        "arc_api_key_used": arc_api_key,
         "available_environments": 0,
         "games_attempted": [],
         "scorecard_opened": False,
@@ -99,7 +106,17 @@ def main():
         },
     }
 
+    if not arc_api_key:
+        result["status"] = "missing_env_var"
+        result["message"] = f"Missing required environment variable: {REQUIRED_ENV_VAR}"
+        write_and_print_result(repo, result)
+        return
+
     try:
+        import arc_agi
+        from arc_agi.base import OperationMode
+        from arcengine import GameAction
+
         arc = arc_agi.Arcade(operation_mode=OperationMode.COMPETITION, arc_api_key=arc_api_key)
         result["available_environments"] = len(arc.available_environments)
 
@@ -155,9 +172,7 @@ def main():
         result["status"] = "failed_initialization"
         result["init_error"] = str(e)
 
-    out = repo / "reports" / "arcagi3_competition_mode_result.json"
-    out.write_text(json.dumps(result, indent=2))
-    print(json.dumps(result, indent=2))
+    write_and_print_result(repo, result)
 
 
 if __name__ == "__main__":
