@@ -36,6 +36,16 @@ python scripts/run_arcagi3_competition_mode.py
 
 If a required variable is missing, each script writes a JSON result with `status: "missing_env_var"` and a clear message.
 
+
+### Scorecard graph utilities
+
+Use `scripts/rewind_scorecard_graph.py` to fetch a local or HTTP(S) scorecard graph artifact, validate its node/edge references, write a normalized copy, and emit a rewound graph with reversed node order and edge direction:
+
+```bash
+python scripts/rewind_scorecard_graph.py
+python scripts/rewind_scorecard_graph.py --source https://example.com/scorecard_graph.json
+```
+
 ## Links
 
 - [ARC Prize](https://arcprize.org)
