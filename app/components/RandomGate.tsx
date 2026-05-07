@@ -13,6 +13,7 @@ type InvoiceResponse = {
   startTime: number;
   endTime: number;
   invoiceId: string;
+  invoiceToken: string;
   transaction: string;
   agentMint: string;
   currencyMint: string;
@@ -102,6 +103,12 @@ export default function RandomGate() {
         connection,
       );
       setSignature(nextSignature);
+      setStatus("Transaction confirmed. Verifying invoice on the backend (this can take a few seconds)...");
+
+      const verification = await postJson<VerifyResponse>("/api/payment/verify", {
+        invoiceId: invoice.invoiceId,
+        invoiceToken: invoice.invoiceToken,
+        wallet: invoice.wallet,
       setStatus("Transaction confirmed. Verifying invoice on the backend...");
 
       const verification = await postJson<VerifyResponse>("/api/payment/verify", {

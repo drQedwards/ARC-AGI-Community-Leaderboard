@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { PublicKey } from "@solana/web3.js";
+import { getPublicConfig, issuePaymentInvoice } from "../../../lib/payments";
 import {
   buildPaymentTransaction,
   createInvoiceParams,
@@ -20,6 +21,7 @@ export async function POST(request: Request) {
     }
 
     const wallet = new PublicKey(body.wallet).toBase58();
+    const invoice = await issuePaymentInvoice(wallet);
     const invoice = createInvoiceParams(wallet);
     const payment = await buildPaymentTransaction(invoice);
 
