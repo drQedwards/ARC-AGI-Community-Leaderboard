@@ -23,6 +23,41 @@ function parseInvoiceId(body: VerifyRequest) {
     throw new Error("Invoice token is required.");
   }
   return body.invoiceId;
+import { grantAccess, InvoicePayload, verifyInvoicePayment } from "../../../lib/payments";
+
+export const runtime = "nodejs";
+
+type VerifyRequest = InvoicePayload & {
+  signature?: string;
+};
+
+function assertSafePositiveInteger(value: number, name: string) {
+  if (!Number.isSafeInteger(value) || value <= 0) {
+    throw new Error(`${name} must be a positive safe integer.`);
+  }
+}
+
+function parseInvoice(body: VerifyRequest): InvoicePayload {
+  const invoice = {
+    wallet: body.wallet,
+    amount: Number(body.amount),
+    memo: Number(body.memo),
+    startTime: Number(body.startTime),
+    endTime: Number(body.endTime),
+  };
+
+  if (!invoice.wallet) {
+    throw new Error("Wallet address is required.");
+  }
+  assertSafePositiveInteger(invoice.amount, "amount");
+  assertSafePositiveInteger(invoice.memo, "memo");
+  assertSafePositiveInteger(invoice.startTime, "startTime");
+  assertSafePositiveInteger(invoice.endTime, "endTime");
+  if (invoice.endTime <= invoice.startTime) {
+    throw new Error("endTime must be greater than startTime.");
+  }
+
+  return invoice;
 }
 
 export async function POST(request: Request) {
@@ -51,6 +86,7 @@ export async function POST(request: Request) {
         { status: 409 },
       );
     }
+    const invoice = parseInvoice(body);
 
     const paid = await verifyInvoicePayment(invoice);
     if (!paid) {

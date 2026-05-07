@@ -1,4 +1,5 @@
 import { createHmac, randomBytes, timingSafeEqual } from "crypto";
+import { randomBytes, randomUUID } from "crypto";
 import {
   getInvoiceIdPDA,
   PumpAgent,
@@ -22,6 +23,8 @@ type InvoiceTokenPayload = InvoicePayload & {
 type AccessTokenPayload = {
   kind: "access";
   version: typeof TOKEN_VERSION;
+
+type AccessGrant = {
   wallet: string;
   expiresAt: number;
 };
@@ -36,6 +39,8 @@ type IssuedInvoice = InvoicePayload & {
 
 type GlobalPaymentState = typeof globalThis & {
   __rngIssuedInvoices?: Map<string, IssuedInvoice>;
+type GlobalAccessState = typeof globalThis & {
+  __rngAccessGrants?: Map<string, AccessGrant>;
 };
 
 export type InvoicePayload = {
@@ -59,6 +64,10 @@ function pruneIssuedInvoices(nowSeconds = Math.floor(Date.now() / 1000)) {
       invoices.delete(invoiceId);
     }
   }
+export function getAccessGrants() {
+  const state = globalThis as GlobalAccessState;
+  state.__rngAccessGrants ??= new Map<string, AccessGrant>();
+  return state.__rngAccessGrants;
 }
 
 function getRequiredEnv(name: string) {
@@ -154,6 +163,11 @@ export function createInvoiceParams(wallet: string): InvoicePayload {
   const endTime = now + DEFAULT_INVOICE_TTL_SECONDS;
 
   const invoice = {
+  if (endTime <= startTime) {
+    throw new Error("Invoice endTime must be greater than startTime.");
+  }
+
+  return {
     wallet,
     amount: getPriceAmount(),
     memo,
@@ -168,6 +182,14 @@ export function createInvoiceParams(wallet: string): InvoicePayload {
 function deriveInvoiceId(invoice: InvoicePayload) {
   const agentMint = new PublicKey(getRequiredEnv("AGENT_TOKEN_MINT_ADDRESS"));
   const currencyMint = new PublicKey(getRequiredEnv("CURRENCY_MINT"));
+}
+
+export async function buildPaymentTransaction(invoice: InvoicePayload) {
+  const connection = getConnection();
+  const agentMint = new PublicKey(getRequiredEnv("AGENT_TOKEN_MINT_ADDRESS"));
+  const currencyMint = new PublicKey(getRequiredEnv("CURRENCY_MINT"));
+  const userPublicKey = new PublicKey(invoice.wallet);
+  const agent = getAgent(connection);
 
   const [invoiceId] = getInvoiceIdPDA(
     agentMint,
@@ -285,6 +307,9 @@ function delay(ms: number) {
 export async function verifyInvoicePayment(invoice: InvoicePayload) {
   const agent = getAgent();
   const params = {
+export async function verifyInvoicePayment(invoice: InvoicePayload) {
+  const agent = getAgent();
+  return agent.validateInvoicePayment({
     user: new PublicKey(invoice.wallet),
     currencyMint: new PublicKey(getRequiredEnv("CURRENCY_MINT")),
     amount: invoice.amount,
@@ -327,4 +352,12 @@ export function hasAccess(accessToken: string | undefined) {
   }
 
   return payload.expiresAt > Date.now();
+  const grants = getAccessGrants();
+  const grant = grants.get(accessToken);
+  if (!grant) return false;
+  if (grant.expiresAt <= Date.now()) {
+    grants.delete(accessToken);
+    return false;
+  }
+  return true;
 }

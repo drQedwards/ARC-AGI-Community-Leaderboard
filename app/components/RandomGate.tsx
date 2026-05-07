@@ -109,6 +109,10 @@ export default function RandomGate() {
         invoiceId: invoice.invoiceId,
         invoiceToken: invoice.invoiceToken,
         wallet: invoice.wallet,
+      setStatus("Transaction confirmed. Verifying invoice on the backend...");
+
+      const verification = await postJson<VerifyResponse>("/api/payment/verify", {
+        ...invoice,
         signature: nextSignature,
       });
       setAccessToken(verification.accessToken);
