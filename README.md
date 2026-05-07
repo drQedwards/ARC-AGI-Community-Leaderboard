@@ -46,6 +46,16 @@ python scripts/rewind_scorecard_graph.py
 python scripts/rewind_scorecard_graph.py --source https://example.com/scorecard_graph.json
 ```
 
+
+### Transaction history utilities
+
+Use `scripts/rewind_transaction_history.py` to fetch Solana transaction signatures from a local fixture, HTTP(S) JSON artifact, or live RPC address, validate the history, write a normalized copy, and emit an oldest-first rewound history:
+
+```bash
+python scripts/rewind_transaction_history.py
+python scripts/rewind_transaction_history.py --address B4cd9KaWdk6vqCxE9WRv3WVmZv26joZfQyG7q57xpump --limit 25
+```
+
 ## Links
 
 - [ARC Prize](https://arcprize.org)
