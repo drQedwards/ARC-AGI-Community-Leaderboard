@@ -1,4 +1,6 @@
-name: "Persistence in Agentic Memory (PMLL)"
+
+title:
+  -name: "Persistence in Agentic Memory (PMLL)"
 
 authors:
   - name: "Josef Edwards"
@@ -18,7 +20,7 @@ versions:
       - name: "claude"
     scores:
       - benchmark: "arc-agi-3"
-        score: 26.0
+        score: 28.0
         set: "public"
         cost: 50.00
       - benchmark: "arc-agi-2"
