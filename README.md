@@ -56,6 +56,29 @@ python scripts/rewind_transaction_history.py
 python scripts/rewind_transaction_history.py --address B4cd9KaWdk6vqCxE9WRv3WVmZv26joZfQyG7q57xpump --limit 25
 ```
 
+
+### Solana address state proof
+
+Use `scripts/inspect_solana_address_state.py` from a backend/cloud terminal to query the current Solana account state for the configured agent token mint (or any supplied address) via JSON-RPC. The script records either the live account/token state or a structured `fetch_failed` report if RPC egress is blocked:
+
+```bash
+python scripts/inspect_solana_address_state.py
+python scripts/inspect_solana_address_state.py --address B4cd9KaWdk6vqCxE9WRv3WVmZv26joZfQyG7q57xpump --rpc-url "$SOLANA_RPC_URL"
+```
+
+### Model slug notes
+
+Do not invent a future model slug in this repo. A model slug is an API-facing identifier string, not proof that a model exists. Treat examples such as `gpt-5.5`, `gpt-5.5-2026-05-07`, or a hypothetical `gpt-6-*` as illustrative naming shapes only unless they appear in the provider's live model list or official documentation.
+
+For backend agents, record the runtime model identity separately from Solana token identity:
+
+- Model slug: the AI model identifier selected by the API/runtime.
+- Agent token mint: the Solana mint address configured by `AGENT_TOKEN_MINT_ADDRESS`.
+- Current token state: fetched from Solana RPC with `scripts/inspect_solana_address_state.py`; if RPC egress is blocked, keep the structured `fetch_failed` report instead of guessing.
+
+Goblin rule: if the goblin claims to be `gpt-6`, make it show the model-list entry or official docs; if the goblin claims a contract address exists, make it show the Solana RPC account state.
+
+
 ## Links
 
 - [ARC Prize](https://arcprize.org)

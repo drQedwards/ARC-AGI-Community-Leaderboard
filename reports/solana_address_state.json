@@ -1,0 +1,8 @@
+{
+  "status": "fetch_failed",
+  "address": "B4cd9KaWdk6vqCxE9WRv3WVmZv26joZfQyG7q57xpump",
+  "rpc_url": "https://rpc.solanatracker.io/public",
+  "fetched_at": "2026-05-07T04:01:01.050482+00:00",
+  "error": "<urlopen error Tunnel connection failed: 403 Forbidden>",
+  "note": "The backend terminal could not reach the configured Solana RPC; rerun from a cloud environment with RPC egress enabled or pass --rpc-url."
+}

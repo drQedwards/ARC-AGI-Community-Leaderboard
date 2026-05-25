@@ -162,6 +162,7 @@ export function createInvoiceParams(wallet: string): InvoicePayload {
   const startTime = now;
   const endTime = now + DEFAULT_INVOICE_TTL_SECONDS;
 
+  const invoice = {
   if (endTime <= startTime) {
     throw new Error("Invoice endTime must be greater than startTime.");
   }
@@ -198,6 +199,16 @@ export async function buildPaymentTransaction(invoice: InvoicePayload) {
     invoice.startTime,
     invoice.endTime,
   );
+
+  return invoiceId;
+}
+
+async function buildPaymentTransaction(invoice: InvoicePayload) {
+  const connection = getConnection();
+  const currencyMint = new PublicKey(getRequiredEnv("CURRENCY_MINT"));
+  const userPublicKey = new PublicKey(invoice.wallet);
+  const agent = getAgent(connection);
+  const invoiceId = deriveInvoiceId(invoice);
 
   const existingInvoice = await connection.getAccountInfo(invoiceId, "confirmed");
   if (existingInvoice) {
@@ -329,13 +340,6 @@ export function grantAccess(wallet: string) {
     expiresAt,
   });
 
-  });
-}
-
-export function grantAccess(wallet: string) {
-  const accessToken = randomUUID();
-  const expiresAt = Date.now() + ACCESS_TTL_MS;
-  getAccessGrants().set(accessToken, { wallet, expiresAt });
   return { accessToken, expiresAt };
 }
 
